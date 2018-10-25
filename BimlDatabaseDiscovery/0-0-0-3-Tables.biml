@@ -1,0 +1,29 @@
+﻿<#@ template tier="30" #>
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+    <Tables>
+    <#
+    foreach (var conn in this.RootNode.OleDbConnections)
+    {
+		// This lacks elegance, but we know what our Connection is
+		// All of our schemas have been emitted and identify their databasename via tag
+
+		// Using the connection, we can find our database
+		var db = this.RootNode.Databases.Where(cn => cn.Connection.Name == conn.Name).FirstOrDefault();
+		
+		// Use our database to find the schemas (this allows us to have filtered schemas in a previous tier)
+		foreach(var schema in this.RootNode.Schemas.Where(d => d.Database.Name == db.Name))
+		{
+			string logicalDisplayFolder = string.Format("{0}_{1}", db.Name, schema.Name);
+        	ImportResults results = conn.GetDatabaseSchema(new List<string>{schema.Name}, new List<string>{}, ImportOptions.None);
+			foreach(var table in results.TableNodes)
+	        { 
+				table.LogicalDisplayFolder = logicalDisplayFolder;
+				// Most important part - assign the schema to the table
+				table.Schema = schema;
+	            WriteLine(table.GetBiml());
+	        }
+        }
+	}    
+    #>
+    </Tables>
+</Biml>

@@ -1,0 +1,12 @@
+﻿<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+    <Connections>
+        <OleDbConnection Name="Source" ConnectionString="Data Source=localhost\dev2017;Initial Catalog=AdventureWorksDW2014;Provider=SQLNCLI11;Integrated Security=SSPI;" CreateInProject="true" >
+            <Annotations>
+                <Annotation Tag="DatabaseName">AdventureWorksDW201W</Annotation>
+                <Annotation Tag="ServerName">localhost\dev2017</Annotation>
+                <Annotation Tag="Provider">SQLNCLI11</Annotation>
+				<Annotation AnnotationType="Description">We can either parse the connection string or make use of tags. Tags are easier and safer</Annotation>
+            </Annotations>
+        </OleDbConnection>
+    </Connections>
+</Biml>

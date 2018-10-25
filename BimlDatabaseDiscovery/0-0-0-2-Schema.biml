@@ -1,0 +1,23 @@
+﻿<#@ template tier="20" #>
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+	<Schemas>
+	<#
+	foreach	(var conn in this.RootNode.OleDbConnections)
+	{
+		ImportResults results = conn.GetDatabaseSchema();
+	
+	#>
+		<# foreach(var schema in results.SchemaNodes)
+		 { 
+			 // GetBiml does not emit the required DatabaseName property
+			 // There doesn't seem to be a property in the SchemaNodes that indicates
+			 // the Connection it was used on, which we could then use to divine DatabaseName
+			 string databaseName = conn.Annotations.Where(an => an.Tag=="DatabaseName").Select(t => t.Text).First().ToString();
+			 schema.Database = RootNode.Databases[databaseName];
+			 schema.LogicalDisplayFolder = databaseName;
+			 WriteLine(schema.GetBiml());
+		}
+		#>
+	<#} #>
+    </Schemas>
+</Biml>

@@ -1,0 +1,25 @@
+﻿<#@ template tier="10" #>
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+	<Databases>
+<#
+	foreach(AstOleDbConnectionNode conn in RootNode.OleDbConnections)
+	{
+		// Test whether the annotation collection contains a tag named DatabaseName
+		if (conn.Annotations.Any(an => an.Tag=="DatabaseName"))
+		{
+			// This returns the very first object that matches the above
+			// We could have been lunatics and repeated the tag
+			// This generates an object which we can use as needed
+			AstAnnotationNode p = conn.Annotations.Where(an => an.Tag=="DatabaseName").First();
+
+			// We use the Select method to pull out only the thing, Text, that we are interested in
+			string p1 = conn.Annotations.Where(an => an.Tag=="DatabaseName").Select(t => t.Text).First().ToString();
+			
+#>
+		<Database ConnectionName="<#= conn.Name #>" Name="<#= p1 #>" ><Annotations><Annotation AnnotationType="Description">Parsed annotation via tags</Annotation></Annotations></Database>
+<#
+		}
+    }
+#>
+	</Databases>
+</Biml>
